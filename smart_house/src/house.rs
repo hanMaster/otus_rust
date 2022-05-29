@@ -91,7 +91,7 @@ impl House {
                 vec![]
             });
 
-            println!("Device list for {}:", room);
+            println!("{}:", room);
             for item in devices_info {
                 println!("{}", item);
             }

@@ -70,23 +70,23 @@ fn main() {
         println!("{}", item);
     }
 
-    println!("Remove thermometer1 from room1");
-
-    house
-        .unset_room_device("room1", "thermometer1")
-        .unwrap_or_else(|err| {
-            eprintln!("Error: {}", err);
-        });
-
-    let devices = house.get_room_devices("room1").unwrap_or_else(|err| {
-        eprintln!("Error: {}", err);
-        vec![]
-    });
-
-    println!("Device list for room1:");
-    for item in devices {
-        println!("{}", item);
-    }
+    // println!("Remove thermometer1 from room1");
+    //
+    // house
+    //     .unset_room_device("room1", "thermometer1")
+    //     .unwrap_or_else(|err| {
+    //         eprintln!("Error: {}", err);
+    //     });
+    //
+    // let devices = house.get_room_devices("room1").unwrap_or_else(|err| {
+    //     eprintln!("Error: {}", err);
+    //     vec![]
+    // });
+    //
+    // println!("Device list for room1:");
+    // for item in devices {
+    //     println!("{}", item);
+    // }
 
     println!("========================================");
     house.print_house_summary();
