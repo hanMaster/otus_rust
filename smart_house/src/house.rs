@@ -38,7 +38,16 @@ impl House {
     pub fn get_room_devices(&self, room_name: &str) -> Result<Vec<String>, &'static str> {
         let room = self.rooms.get(room_name);
         if let Some(r) = room {
-            Ok(r.get_devices_list())
+            Ok(r.get_device_names_list())
+        } else {
+            Err("Room not found")
+        }
+    }
+
+    pub fn get_room_devices_info(&self, room_name: &str) -> Result<Vec<String>, &'static str> {
+        let room = self.rooms.get(room_name);
+        if let Some(r) = room {
+            Ok(r.get_device_info_list())
         } else {
             Err("Room not found")
         }
@@ -70,6 +79,22 @@ impl House {
             Ok(())
         } else {
             Err("Room not found")
+        }
+    }
+
+    pub fn print_house_summary(&self) {
+        println!("Device report for house: {}", self.get_name());
+        let rooms = self.get_rooms_list();
+        for room in rooms {
+            let devices_info = self.get_room_devices_info(&room).unwrap_or_else(|err| {
+                eprintln!("Error: {}", err);
+                vec![]
+            });
+
+            println!("Device list for {}:", room);
+            for item in devices_info {
+                println!("{}", item);
+            }
         }
     }
 }

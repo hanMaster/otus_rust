@@ -1,3 +1,4 @@
+use crate::device;
 use crate::device::Device;
 use std::collections::HashMap;
 
@@ -26,10 +27,19 @@ impl Room {
         self.devices.remove(device_name);
     }
 
-    pub fn get_devices_list(&self) -> Vec<String> {
+    pub fn get_device_names_list(&self) -> Vec<String> {
         let mut res = vec![];
         for r in &self.devices {
             res.push(r.0.clone());
+        }
+        res
+    }
+
+    pub fn get_device_info_list(&self) -> Vec<String> {
+        let mut res = vec![];
+        for r in &self.devices {
+            let device = r.1;
+            res.push(device::Info::get_info(device));
         }
         res
     }

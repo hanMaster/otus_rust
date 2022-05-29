@@ -1,10 +1,20 @@
-#[derive(Debug)]
+use crate::device::Info;
+use std::fmt::{Display, Formatter};
+
 pub enum SwitchState {
     OFF,
     ON,
 }
 
-#[derive(Debug)]
+impl Display for SwitchState {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match *self {
+            SwitchState::ON => write!(f, "ON"),
+            SwitchState::OFF => write!(f, "OFF"),
+        }
+    }
+}
+
 pub struct Switcher {
     description: String,
     state: SwitchState,
@@ -14,6 +24,15 @@ pub struct Switcher {
 impl Default for Switcher {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl Info for Switcher {
+    fn get_info(&self) -> String {
+        format!(
+            "Switcher: {}, state: {}, current_power_consumption: {}",
+            self.description, self.state, self.current_power_consumption
+        )
     }
 }
 

@@ -88,10 +88,6 @@ fn main() {
         println!("{}", item);
     }
 
-    // println!("Device: {}", switcher.get_description());
-    // println!("Device state: {}", switcher.get_state());
-    // switcher.toggle_switch();
-    // println!("Device state: {}", switcher.get_state());
-    // let thermometer = Thermometer::default();
-    // println!("Current temperature: {}", thermometer.get_temperature());
+    println!("========================================");
+    house.print_house_summary();
 }
