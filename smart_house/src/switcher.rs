@@ -1,8 +1,10 @@
+#[derive(Debug)]
 pub enum SwitchState {
     OFF,
     ON,
 }
 
+#[derive(Debug)]
 pub struct Switcher {
     description: String,
     state: SwitchState,

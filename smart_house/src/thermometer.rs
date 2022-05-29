@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct Thermometer {
     current_temperature: f64,
 }
