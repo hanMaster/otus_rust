@@ -1,5 +1,4 @@
-use crate::device;
-use crate::device::Device;
+use crate::device::{Device, Info};
 use std::collections::HashMap;
 
 pub struct Room {
@@ -39,7 +38,7 @@ impl Room {
         let mut res = vec![];
         for r in &self.devices {
             let device = r.1;
-            res.push(device::Info::get_info(device));
+            res.push(device.get_info());
         }
         res
     }

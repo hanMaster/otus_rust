@@ -19,8 +19,8 @@ impl House {
         self.rooms.insert(String::from(room_name), room);
     }
 
-    pub fn remove_room(&mut self, room_name: &str) {
-        self.rooms.remove(room_name);
+    pub fn remove_room(&mut self, room_name: &str)-> Option<Room> {
+        self.rooms.remove(room_name)
     }
 
     pub fn get_name(&self) -> &str {
@@ -35,22 +35,14 @@ impl House {
         res
     }
 
-    pub fn get_room_devices(&self, room_name: &str) -> Result<Vec<String>, &'static str> {
+    pub fn get_room_devices(&self, room_name: &str) -> Option<Vec<String>> {
         let room = self.rooms.get(room_name);
-        if let Some(r) = room {
-            Ok(r.get_device_names_list())
-        } else {
-            Err("Room not found")
-        }
+        room.map(|r| r.get_device_names_list())
     }
 
-    pub fn get_room_devices_info(&self, room_name: &str) -> Result<Vec<String>, &'static str> {
+    pub fn get_room_devices_info(&self, room_name: &str) -> Option<Vec<String>> {
         let room = self.rooms.get(room_name);
-        if let Some(r) = room {
-            Ok(r.get_device_info_list())
-        } else {
-            Err("Room not found")
-        }
+        room.map(|r| r.get_device_info_list())
     }
 
     pub fn set_room_device(
@@ -86,10 +78,9 @@ impl House {
         println!("Device report for house: {}", self.get_name());
         let rooms = self.get_rooms_list();
         for room in rooms {
-            let devices_info = self.get_room_devices_info(&room).unwrap_or_else(|err| {
-                eprintln!("Error: {}", err);
-                vec![]
-            });
+            let devices_info = self
+                .get_room_devices_info(&room)
+                .expect("Unable to get devices info");
 
             println!("{}:", room);
             for item in devices_info {

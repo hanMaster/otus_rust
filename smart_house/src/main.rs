@@ -22,6 +22,7 @@ fn main() {
 
     let rooms = house.get_rooms_list();
     for item in rooms {
+        // let room_name = 1;
         println!("{}", item);
     }
 
@@ -50,43 +51,23 @@ fn main() {
             eprintln!("Error: {}", err);
         });
 
-    let devices = house.get_room_devices("room1").unwrap_or_else(|err| {
-        eprintln!("Error: {}", err);
-        vec![]
-    });
+    let devices = house
+        .get_room_devices("room1")
+        .expect("Unable to get devices");
 
     println!("Device list for room1:");
     for item in devices {
         println!("{}", item);
     }
 
-    let devices = house.get_room_devices("room3").unwrap_or_else(|err| {
-        eprintln!("Error: {}", err);
-        vec![]
-    });
+    let devices = house
+        .get_room_devices("room3")
+        .expect("Unable to get devices");
 
     println!("Device list for room3:");
     for item in devices {
         println!("{}", item);
     }
-
-    // println!("Remove thermometer1 from room1");
-    //
-    // house
-    //     .unset_room_device("room1", "thermometer1")
-    //     .unwrap_or_else(|err| {
-    //         eprintln!("Error: {}", err);
-    //     });
-    //
-    // let devices = house.get_room_devices("room1").unwrap_or_else(|err| {
-    //     eprintln!("Error: {}", err);
-    //     vec![]
-    // });
-    //
-    // println!("Device list for room1:");
-    // for item in devices {
-    //     println!("{}", item);
-    // }
 
     println!("========================================");
     house.print_house_summary();
