@@ -14,7 +14,7 @@ fn main() {
     let rooms = house.get_rooms_list();
     println!("Rooms list:");
     for item in rooms {
-        println!("{}", item);
+        println!("{}", item.0);
     }
 
     println!("remove room 2");
@@ -22,8 +22,7 @@ fn main() {
 
     let rooms = house.get_rooms_list();
     for item in rooms {
-        // let room_name = 1;
-        println!("{}", item);
+        println!("{}", item.0);
     }
 
     let switcher = Switcher::default();

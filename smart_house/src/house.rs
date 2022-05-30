@@ -1,5 +1,6 @@
 use crate::device::Device;
 use crate::room::Room;
+use std::collections::hash_map::Iter;
 use std::collections::HashMap;
 
 pub struct House {
@@ -19,7 +20,7 @@ impl House {
         self.rooms.insert(String::from(room_name), room);
     }
 
-    pub fn remove_room(&mut self, room_name: &str)-> Option<Room> {
+    pub fn remove_room(&mut self, room_name: &str) -> Option<Room> {
         self.rooms.remove(room_name)
     }
 
@@ -27,12 +28,8 @@ impl House {
         self.house_name.as_str()
     }
 
-    pub fn get_rooms_list(&self) -> Vec<String> {
-        let mut res = vec![];
-        for r in &self.rooms {
-            res.push(r.0.clone());
-        }
-        res
+    pub fn get_rooms_list(&self) -> Iter<String, Room> {
+        self.rooms.iter()
     }
 
     pub fn get_room_devices(&self, room_name: &str) -> Option<Vec<String>> {
@@ -79,10 +76,10 @@ impl House {
         let rooms = self.get_rooms_list();
         for room in rooms {
             let devices_info = self
-                .get_room_devices_info(&room)
+                .get_room_devices_info(room.0)
                 .expect("Unable to get devices info");
 
-            println!("{}:", room);
+            println!("{}:", room.0);
             for item in devices_info {
                 println!("{}", item);
             }
