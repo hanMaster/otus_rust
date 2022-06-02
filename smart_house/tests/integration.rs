@@ -4,26 +4,13 @@ use smart_house::room::Room;
 use smart_house::switcher::Switcher;
 use smart_house::thermometer::Thermometer;
 
-fn main() {
+#[test]
+fn test_summary_report() {
     let mut house = House::new(String::from("myHouse"));
 
     house.add_room("room1", Room::new());
     house.add_room("room2", Room::new());
     house.add_room("room3", Room::new());
-
-    let rooms = house.get_rooms_list();
-    println!("Rooms list:");
-    for item in rooms {
-        println!("{}", item.0);
-    }
-
-    println!("remove room 2");
-    house.remove_room("room2");
-
-    let rooms = house.get_rooms_list();
-    for item in rooms {
-        println!("{}", item.0);
-    }
 
     let switcher = Switcher::default();
     house
@@ -39,10 +26,11 @@ fn main() {
             eprintln!("Error: {}", err);
         });
 
+
     let thermometer2 = Thermometer::default();
     house
         .set_room_device(
-            "room3",
+            "room2",
             "thermometer2",
             Device::DevThermometer(thermometer2),
         )
@@ -50,24 +38,13 @@ fn main() {
             eprintln!("Error: {}", err);
         });
 
-    let devices = house
-        .get_room_devices("room1")
-        .expect("Unable to get devices");
+    let mut switcher2 = Switcher::default();
+    switcher2.set_description("Main switcher");
+    house
+        .set_room_device("room3", "switcher2", Device::DevSwitcher(switcher2))
+        .unwrap_or_else(|err| {
+            eprintln!("Error: {}", err);
+        });
 
-    println!("Device list for room1:");
-    for item in devices {
-        println!("{}", item);
-    }
-
-    let devices = house
-        .get_room_devices("room3")
-        .expect("Unable to get devices");
-
-    println!("Device list for room3:");
-    for item in devices {
-        println!("{}", item);
-    }
-
-    println!("========================================");
     house.print_house_summary();
 }

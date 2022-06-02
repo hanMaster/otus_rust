@@ -43,3 +43,38 @@ impl Room {
         res
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::switcher::Switcher;
+
+    #[test]
+    fn test_add_remove_devices() {
+        let mut room = Room::new();
+        let sw = Device::DevSwitcher(Switcher::new());
+        room.add_device("switch1", sw);
+        assert_eq!(1, room.devices.len());
+        room.remove_device("switch1");
+        assert_eq!(0, room.devices.len());
+    }
+
+    #[test]
+    fn test_get_device_names_list() {
+        let mut room = Room::new();
+        let sw = Device::DevSwitcher(Switcher::new());
+        room.add_device("switch1", sw);
+        assert_eq!(vec!["switch1"], room.get_device_names_list());
+    }
+
+    #[test]
+    fn test_get_device_info_list() {
+        let mut room = Room::new();
+        let sw = Device::DevSwitcher(Switcher::new());
+        room.add_device("switch1", sw);
+        assert_eq!(
+            vec!["Switcher: new switcher, state: OFF, current_power_consumption: 0"],
+            room.get_device_info_list()
+        );
+    }
+}

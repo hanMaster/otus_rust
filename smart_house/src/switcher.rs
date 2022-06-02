@@ -73,3 +73,23 @@ impl Switcher {
         self.current_power_consumption
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_description() {
+        let mut switch = Switcher::new();
+        switch.set_description("my socket");
+        assert_eq!("my socket", switch.get_description());
+    }
+
+    #[test]
+    fn test_toggle() {
+        let mut switch = Switcher::new();
+        assert_eq!("Switched OFF", switch.get_state());
+        switch.toggle_switch();
+        assert_eq!("Switched ON", switch.get_state());
+    }
+}

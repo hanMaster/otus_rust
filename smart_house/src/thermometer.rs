@@ -8,7 +8,7 @@ pub struct Thermometer {
 impl Default for Thermometer {
     fn default() -> Self {
         Self {
-            current_temperature: 0.0,
+            current_temperature: 18.0,
         }
     }
 }
@@ -25,5 +25,22 @@ impl Info for Thermometer {
 impl Thermometer {
     pub fn get_temperature(&self) -> f64 {
         self.current_temperature
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_get_temperature() {
+        let term = Thermometer::default();
+        assert_eq!(18.0, term.get_temperature());
+    }
+
+    #[test]
+    fn test_get_info() {
+        let term = Thermometer::default();
+        assert_eq!("Thermometer: current_temperature: 18", term.get_info());
     }
 }
