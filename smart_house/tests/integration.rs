@@ -26,7 +26,6 @@ fn test_summary_report() {
             eprintln!("Error: {}", err);
         });
 
-
     let thermometer2 = Thermometer::default();
     house
         .set_room_device(
