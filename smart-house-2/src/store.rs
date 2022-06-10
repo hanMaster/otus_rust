@@ -1,4 +1,5 @@
 use crate::device::{Device, Info};
+use crate::errors::{DeviceErrors, StoreError};
 use crate::house::RoomName;
 use std::collections::HashMap;
 
@@ -28,14 +29,18 @@ impl DeviceStore {
 }
 
 impl Info for DeviceStore {
-    fn get_info_by_room_and_device(&self, room_name: &str, device_name: &str) -> String {
+    fn get_info_by_room_and_device(
+        &self,
+        room_name: &str,
+        device_name: &str,
+    ) -> Result<String, StoreError> {
         if let Some(device) = self
             .devices
             .get(&(room_name.to_string(), device_name.to_string()))
         {
-            device.get_info()
+            Ok(device.get_info())
         } else {
-            String::from("Device not found")
+            Err(StoreError::with_source(DeviceErrors::DeviceNotFound))
         }
     }
 }

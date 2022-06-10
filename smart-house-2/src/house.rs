@@ -51,7 +51,9 @@ impl House {
                     "Room: {}, Device: {}, Status: {}",
                     room_name,
                     device_name,
-                    store.get_info_by_room_and_device(room_name, device_name)
+                    store
+                        .get_info_by_room_and_device(room_name, device_name)
+                        .unwrap_or_else(|err| format!("{}", err))
                 );
             })
         });

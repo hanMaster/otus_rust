@@ -1,8 +1,9 @@
-use crate::switcher::Switcher;
+use crate::errors::StoreError;
+use crate::socket::Socket;
 use crate::thermometer::Thermometer;
 
 pub enum Device {
-    DevSwitcher(Switcher),
+    DevSwitcher(Socket),
     DevThermometer(Thermometer),
 }
 
@@ -11,8 +12,12 @@ pub trait Info {
         String::from("Device info")
     }
 
-    fn get_info_by_room_and_device(&self, _room_name: &str, _device_name: &str) -> String {
-        String::from("Device info")
+    fn get_info_by_room_and_device(
+        &self,
+        _room_name: &str,
+        _device_name: &str,
+    ) -> Result<String, StoreError> {
+        Ok(String::from("Device info"))
     }
 }
 

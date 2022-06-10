@@ -1,33 +1,33 @@
 use crate::device::Info;
 use std::fmt::{Display, Formatter};
 
-pub enum SwitchState {
+pub enum SocketState {
     OFF,
     ON,
 }
 
-impl Display for SwitchState {
+impl Display for SocketState {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match *self {
-            SwitchState::ON => write!(f, "ON"),
-            SwitchState::OFF => write!(f, "OFF"),
+            SocketState::ON => write!(f, "ON"),
+            SocketState::OFF => write!(f, "OFF"),
         }
     }
 }
 
-pub struct Switcher {
+pub struct Socket {
     description: String,
-    state: SwitchState,
+    state: SocketState,
     current_power_consumption: f64,
 }
 
-impl Default for Switcher {
+impl Default for Socket {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl Info for Switcher {
+impl Info for Socket {
     fn get_info(&self) -> String {
         format!(
             "Switcher: {}, state: {}, current_power_consumption: {}",
@@ -36,12 +36,12 @@ impl Info for Switcher {
     }
 }
 
-impl Switcher {
+impl Socket {
     pub fn new() -> Self {
-        let description = String::from("new switcher");
+        let description = String::from("new socket");
         Self {
             description,
-            state: SwitchState::OFF,
+            state: SocketState::OFF,
             current_power_consumption: 0.0,
         }
     }
@@ -56,16 +56,16 @@ impl Switcher {
 
     pub fn get_state(&self) -> String {
         match self.state {
-            SwitchState::ON => String::from("Switched ON"),
-            SwitchState::OFF => String::from("Switched OFF"),
+            SocketState::ON => String::from("Switched ON"),
+            SocketState::OFF => String::from("Switched OFF"),
         }
     }
 
     pub fn toggle_switch(&mut self) {
-        if let SwitchState::OFF = self.state {
-            self.state = SwitchState::ON;
+        if let SocketState::OFF = self.state {
+            self.state = SocketState::ON;
         } else {
-            self.state = SwitchState::OFF;
+            self.state = SocketState::OFF;
         }
     }
 
@@ -80,16 +80,16 @@ mod test {
 
     #[test]
     fn test_description() {
-        let mut switch = Switcher::new();
-        switch.set_description("my socket");
-        assert_eq!("my socket", switch.get_description());
+        let mut socket = Socket::new();
+        socket.set_description("my socket");
+        assert_eq!("my socket", socket.get_description());
     }
 
     #[test]
     fn test_toggle() {
-        let mut switch = Switcher::new();
-        assert_eq!("Switched OFF", switch.get_state());
-        switch.toggle_switch();
-        assert_eq!("Switched ON", switch.get_state());
+        let mut socket = Socket::new();
+        assert_eq!("Switched OFF", socket.get_state());
+        socket.toggle_switch();
+        assert_eq!("Switched ON", socket.get_state());
     }
 }
