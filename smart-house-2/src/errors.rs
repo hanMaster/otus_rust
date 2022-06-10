@@ -23,9 +23,8 @@ pub struct StoreError {
 
 impl Display for StoreError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let mut result = "Store error ".to_string();
-        result.push_str(self.source.to_string().as_str());
-        write!(f, "{}", result)
+        let result = "Store error ";
+        write!(f, "{} {}", result, self.source)
     }
 }
 
