@@ -53,7 +53,7 @@ impl House {
                     device_name,
                     store
                         .get_info_by_room_and_device(room_name, device_name)
-                        .unwrap_or_else(|err| format!("{}", err))
+                        .unwrap_or_else(|err| err.to_string())
                 );
             })
         });
