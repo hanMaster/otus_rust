@@ -1,8 +1,9 @@
-use socket::Socket;
 use crate::socket_server::SocketServer;
+use socket::Socket;
 
 mod socket_server;
 
+// cargo run --package client
 fn main() -> std::io::Result<()> {
     let mut socket = Socket::new();
     socket.set_description("Socket with TCP server");

@@ -19,7 +19,7 @@ impl Display for SocketState {
 pub struct Socket {
     description: String,
     state: SocketState,
-    current_power_consumption: f64
+    current_power_consumption: f64,
 }
 
 impl Default for Socket {
@@ -34,7 +34,7 @@ impl Socket {
         Self {
             description,
             state: SocketState::OFF,
-            current_power_consumption: 0.0
+            current_power_consumption: 0.0,
         }
     }
 

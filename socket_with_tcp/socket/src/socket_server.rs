@@ -8,8 +8,8 @@ pub struct SocketServer {
 
 impl SocketServer {
     pub fn bind<Addrs>(addrs: Addrs) -> io::Result<TcpListener>
-        where
-            Addrs: ToSocketAddrs,
+    where
+        Addrs: ToSocketAddrs,
     {
         let tcp = TcpListener::bind(addrs)?;
         Ok(tcp)
