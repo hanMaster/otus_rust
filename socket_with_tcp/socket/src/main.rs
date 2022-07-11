@@ -3,7 +3,7 @@ use socket::Socket;
 
 mod socket_server;
 
-// cargo run --package client
+// cargo run --package socket
 fn main() -> std::io::Result<()> {
     let mut socket = Socket::new();
     socket.set_description("Socket with TCP server");
