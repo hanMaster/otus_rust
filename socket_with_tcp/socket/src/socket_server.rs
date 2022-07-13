@@ -1,4 +1,3 @@
-use std::cell::{RefMut};
 use std::io;
 use std::io::Read;
 use std::net::{TcpListener, TcpStream, ToSocketAddrs};
@@ -16,7 +15,7 @@ impl SocketServer {
         Ok(tcp)
     }
 
-    pub fn handle_client(mut stream: TcpStream, mut socket: RefMut<Socket>) -> io::Result<()> {
+    pub fn handle_client(mut stream: TcpStream, socket: &mut Socket) -> io::Result<()> {
         let mut buf = [0;4];
         stream.read_exact(&mut buf)?;
         let decoded = buf.as_slice().decrypt();
