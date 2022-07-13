@@ -1,6 +1,6 @@
+pub mod cmd;
+pub mod crypt;
 use std::fmt::{Display, Formatter};
-use std::io;
-use std::net::{TcpListener, ToSocketAddrs};
 
 pub enum SocketState {
     OFF,

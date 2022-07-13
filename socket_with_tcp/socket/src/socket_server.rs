@@ -1,10 +1,11 @@
+use std::cell::{RefMut};
 use std::io;
 use std::io::Read;
 use std::net::{TcpListener, TcpStream, ToSocketAddrs};
+use socket::crypt::Crypt;
+use socket::Socket;
 
-pub struct SocketServer {
-    listener: TcpListener,
-}
+pub struct SocketServer {}
 
 impl SocketServer {
     pub fn bind<Addrs>(addrs: Addrs) -> io::Result<TcpListener>
@@ -15,10 +16,20 @@ impl SocketServer {
         Ok(tcp)
     }
 
-    pub fn handle_client(mut stream: TcpStream) -> io::Result<()> {
-        let mut buf = String::new();
-        stream.read_to_string(&mut buf)?;
-        println!("{}", buf);
+    pub fn handle_client(mut stream: TcpStream, mut socket: RefMut<Socket>) -> io::Result<()> {
+        let mut buf = [0;4];
+        stream.read_exact(&mut buf)?;
+        let decoded = buf.as_slice().decrypt();
+        // println!("received: {}", String::from_utf8(decoded).unwrap());
+        match decoded.as_slice() {
+            b"cmd0" => {
+                println!("received: {}", String::from_utf8(decoded).unwrap());
+                socket.toggle_switch();
+                let state = socket.get_state();
+                println!("{}", state);
+            },
+            _ => println!("received: bad command")
+        }
         Ok(())
     }
 }
