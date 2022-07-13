@@ -1,9 +1,9 @@
+use concat_arrays::concat_arrays;
+use socket::crypt::Crypt;
+use socket::Socket;
 use std::io;
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream, ToSocketAddrs};
-use socket::crypt::Crypt;
-use socket::Socket;
-use concat_arrays::concat_arrays;
 
 pub struct SocketServer {}
 
@@ -28,7 +28,7 @@ impl SocketServer {
     /// 8 byte - f64 (power consumption)
 
     pub fn handle_client(mut stream: TcpStream, socket: &mut Socket) -> io::Result<()> {
-        let mut buf = [0;4];
+        let mut buf = [0; 4];
         stream.read_exact(&mut buf)?;
         let decoded = buf.as_slice().decrypt();
         match decoded.as_slice() {
@@ -36,21 +36,25 @@ impl SocketServer {
                 println!("Socket status requested");
                 let state = socket.get_state();
                 let pwr = socket.get_current_power_consumption();
-                println!("State: {}, pwr: {:.2} Watt", if state == 1 {"ON"} else {"OFF"}, pwr);
+                println!(
+                    "State: {}, pwr: {:.2} Watt",
+                    if state == 1 { "ON" } else { "OFF" },
+                    pwr
+                );
                 let prefix = b"skt";
                 let pwr_bytes = pwr.to_be_bytes();
                 let response: [u8; 12] = concat_arrays!(*prefix, [state], pwr_bytes);
-                stream.write(&response.as_slice().encrypt())?;
-            },
+                stream.write_all(&response.as_slice().encrypt())?;
+            }
             b"cmd1" => {
                 println!("Socket switch on invoked");
                 socket.switch_on();
-            },
+            }
             b"cmd2" => {
                 println!("Socket switch off invoked");
                 socket.switch_off();
-            },
-            _ => println!("received: bad command")
+            }
+            _ => println!("received: bad command"),
         }
         Ok(())
     }

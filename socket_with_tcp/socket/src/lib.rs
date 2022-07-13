@@ -1,7 +1,7 @@
 pub mod cmd;
 pub mod crypt;
-use std::fmt::{Display, Formatter};
 use rand::Rng;
+use std::fmt::{Display, Formatter};
 
 pub enum SocketState {
     OFF,
