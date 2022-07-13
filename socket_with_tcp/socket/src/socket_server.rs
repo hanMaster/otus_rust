@@ -19,25 +19,21 @@ impl SocketServer {
         let mut buf = [0;4];
         stream.read_exact(&mut buf)?;
         let decoded = buf.as_slice().decrypt();
-        // println!("received: {}", String::from_utf8(decoded).unwrap());
         match decoded.as_slice() {
             b"cmd0" => {
-                println!("received: {}", String::from_utf8(decoded).unwrap());
+                println!("Socket status requested");
                 let state = socket.get_state();
-                println!("{}", state);
-                stream.write(b"qwertyui").expect("Unable to send data");
+                let pwr = socket.get_current_power_consumption();
+                println!("State: {}, pwr: {:.2} Watt", if state == 1 {"ON"} else {"OFF"}, pwr);
+                stream.write(b"qwertyui")?;
             },
             b"cmd1" => {
-                println!("received: {}", String::from_utf8(decoded).unwrap());
+                println!("Socket switch on invoked");
                 socket.switch_on();
-                let state = socket.get_state();
-                println!("{}", state);
             },
             b"cmd2" => {
-                println!("received: {}", String::from_utf8(decoded).unwrap());
+                println!("Socket switch off invoked");
                 socket.switch_off();
-                let state = socket.get_state();
-                println!("{}", state);
             },
             _ => println!("received: bad command")
         }

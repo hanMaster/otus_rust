@@ -12,4 +12,16 @@ impl SocketClient {
         stream.read_exact(&mut buf)?;
         Ok(String::from_utf8(Vec::try_from(buf).unwrap()).unwrap())
     }
+
+    pub fn switch_on() -> std::io::Result<()> {
+        let mut stream = TcpStream::connect("127.0.0.1:7000")?;
+        stream.write(&Commands::switch_on_cmd())?;
+        Ok(())
+    }
+
+    pub fn switch_off() -> std::io::Result<()> {
+        let mut stream = TcpStream::connect("127.0.0.1:7000")?;
+        stream.write(&Commands::switch_off_cmd())?;
+        Ok(())
+    }
 }

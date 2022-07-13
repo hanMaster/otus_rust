@@ -1,6 +1,7 @@
 pub mod cmd;
 pub mod crypt;
 use std::fmt::{Display, Formatter};
+use rand::Rng;
 
 pub enum SocketState {
     OFF,
@@ -46,27 +47,22 @@ impl Socket {
         self.description = String::from(new_description);
     }
 
-    pub fn get_state(&self) -> String {
+    pub fn get_state(&self) -> u8 {
         match self.state {
-            SocketState::ON => String::from("Switched ON"),
-            SocketState::OFF => String::from("Switched OFF"),
-        }
-    }
-
-    pub fn toggle_switch(&mut self) {
-        if let SocketState::OFF = self.state {
-            self.state = SocketState::ON;
-        } else {
-            self.state = SocketState::OFF;
+            SocketState::ON => 1,
+            SocketState::OFF => 0,
         }
     }
 
     pub fn switch_on(&mut self) {
+        let mut rng = rand::thread_rng();
         self.state = SocketState::ON;
+        self.current_power_consumption = rng.gen_range(1.0..1000.0);
     }
 
     pub fn switch_off(&mut self) {
         self.state = SocketState::OFF;
+        self.current_power_consumption = 0.0;
     }
 
     pub fn get_current_power_consumption(&self) -> f64 {
