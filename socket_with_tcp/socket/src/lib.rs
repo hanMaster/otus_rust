@@ -61,6 +61,14 @@ impl Socket {
         }
     }
 
+    pub fn switch_on(&mut self) {
+        self.state = SocketState::ON;
+    }
+
+    pub fn switch_off(&mut self) {
+        self.state = SocketState::OFF;
+    }
+
     pub fn get_current_power_consumption(&self) -> f64 {
         self.current_power_consumption
     }

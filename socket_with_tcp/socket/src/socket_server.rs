@@ -1,5 +1,5 @@
 use std::io;
-use std::io::Read;
+use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream, ToSocketAddrs};
 use socket::crypt::Crypt;
 use socket::Socket;
@@ -23,7 +23,19 @@ impl SocketServer {
         match decoded.as_slice() {
             b"cmd0" => {
                 println!("received: {}", String::from_utf8(decoded).unwrap());
-                socket.toggle_switch();
+                let state = socket.get_state();
+                println!("{}", state);
+                stream.write(b"qwertyui").expect("Unable to send data");
+            },
+            b"cmd1" => {
+                println!("received: {}", String::from_utf8(decoded).unwrap());
+                socket.switch_on();
+                let state = socket.get_state();
+                println!("{}", state);
+            },
+            b"cmd2" => {
+                println!("received: {}", String::from_utf8(decoded).unwrap());
+                socket.switch_off();
                 let state = socket.get_state();
                 println!("{}", state);
             },
