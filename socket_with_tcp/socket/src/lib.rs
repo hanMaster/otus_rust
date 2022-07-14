@@ -84,8 +84,8 @@ mod test {
     #[test]
     fn test_toggle() {
         let mut socket = Socket::new();
-        assert_eq!("Switched OFF", socket.get_state());
-        socket.toggle_switch();
-        assert_eq!("Switched ON", socket.get_state());
+        assert_eq!(0, socket.get_state());
+        socket.switch_on();
+        assert_eq!(1, socket.get_state());
     }
 }
