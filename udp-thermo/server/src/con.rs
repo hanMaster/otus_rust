@@ -1,7 +1,7 @@
 use crate::pool::ClientPool;
 use std::io;
 use std::io::Read;
-use std::net::{TcpListener, TcpStream, ToSocketAddrs};
+use std::net::{SocketAddr, TcpListener, TcpStream, ToSocketAddrs};
 use std::sync::Arc;
 
 #[derive(Default)]
@@ -33,7 +33,12 @@ impl Connector {
             }
             b"done" => {
                 println!("Terminate connection requested");
-                pool.remove_client(addr);
+                stream.read_exact(&mut buf)?;
+                let len = u32::from_be_bytes(buf);
+                let mut buf = vec![0; len as _];
+                stream.read_exact(&mut buf)?;
+                let addr = String::from_utf8(buf).expect("Failed to parse data");
+                pool.remove_client(addr.parse::<SocketAddr>().expect("Failed to create addr"));
             }
             _ => println!("received: bad command"),
         }
