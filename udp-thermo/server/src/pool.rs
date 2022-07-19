@@ -1,7 +1,6 @@
 use std::collections::HashSet;
 use std::net::SocketAddr;
-use std::ops::{Deref, DerefMut};
-use std::sync::{Arc, Mutex};
+use std::sync::Mutex;
 
 #[derive(Default, Debug)]
 pub struct ClientPool {

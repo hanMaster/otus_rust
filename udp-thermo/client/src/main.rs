@@ -1,7 +1,7 @@
 use std::io::Write;
 use std::net::{SocketAddr, TcpStream, UdpSocket};
-use std::{io, thread};
 use std::time::Duration;
+use std::{io, thread};
 
 fn main() -> io::Result<()> {
     let addr = negotiate_addr()?;
@@ -21,6 +21,6 @@ fn main() -> io::Result<()> {
 fn negotiate_addr() -> io::Result<SocketAddr> {
     let mut stream = TcpStream::connect("127.0.0.1:7000")?;
     let cmd = "init".as_bytes();
-    stream.write_all(&cmd)?;
-    Ok(stream.local_addr()?)
+    stream.write_all(cmd)?;
+    stream.local_addr()
 }

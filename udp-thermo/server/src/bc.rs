@@ -1,8 +1,8 @@
 use crate::pool::ClientPool;
 use crate::thermo::Thermometer;
 use std::net::UdpSocket;
-use std::{thread};
 use std::sync::Arc;
+use std::thread;
 use std::time::Duration;
 
 #[derive(Default)]
