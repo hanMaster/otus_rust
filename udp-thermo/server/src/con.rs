@@ -1,22 +1,23 @@
 use crate::pool::ClientPool;
 use std::io;
-use std::io::Read;
-use std::net::{SocketAddr, TcpListener, TcpStream, ToSocketAddrs};
+use std::net::SocketAddr;
 use std::sync::Arc;
+use tokio::io::AsyncReadExt;
+use tokio::net::{TcpListener, TcpStream, ToSocketAddrs};
 
 #[derive(Default)]
 pub struct Connector;
 
 impl Connector {
-    pub fn bind<Addrs>(&self, addrs: Addrs) -> io::Result<TcpListener>
+    pub async fn bind<Addrs>(&self, addrs: Addrs) -> io::Result<TcpListener>
     where
         Addrs: ToSocketAddrs,
     {
-        let tcp = TcpListener::bind(addrs)?;
+        let tcp = TcpListener::bind(addrs).await?;
         Ok(tcp)
     }
 
-    pub fn handle_client(
+    pub async fn handle_client(
         &mut self,
         mut stream: TcpStream,
         pool: Arc<ClientPool>,
@@ -24,7 +25,7 @@ impl Connector {
         let addr = stream.peer_addr().expect("Failed to get peer address");
         println!("Peer connected: {:?}", addr);
         let mut buf = [0; 4];
-        stream.read_exact(&mut buf)?;
+        stream.read_exact(&mut buf).await?;
         let decoded = buf.as_slice();
         match decoded {
             b"init" => {
@@ -33,10 +34,10 @@ impl Connector {
             }
             b"done" => {
                 println!("Terminate connection requested");
-                stream.read_exact(&mut buf)?;
+                stream.read_exact(&mut buf).await?;
                 let len = u32::from_be_bytes(buf);
                 let mut buf = vec![0; len as _];
-                stream.read_exact(&mut buf)?;
+                stream.read_exact(&mut buf).await?;
                 let addr = String::from_utf8(buf).expect("Failed to parse data");
                 pool.remove_client(addr.parse::<SocketAddr>().expect("Failed to create addr"));
             }
