@@ -1,17 +1,18 @@
 use socket::cmd::Commands;
 use socket::crypt::Crypt;
 use std::io;
-use std::io::{ErrorKind, Read, Write};
-use std::net::TcpStream;
+use std::io::ErrorKind;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::net::TcpStream;
 
 pub struct SocketClient {}
 
 impl SocketClient {
-    pub fn get_status() -> io::Result<String> {
-        let mut stream = TcpStream::connect("127.0.0.1:7000")?;
-        stream.write_all(&Commands::get_status_cmd())?;
+    pub async fn get_status() -> io::Result<String> {
+        let mut stream = TcpStream::connect("127.0.0.1:7000").await?;
+        stream.write_all(&Commands::get_status_cmd()).await?;
         let mut buf: [u8; 12] = [0; 12];
-        stream.read_exact(&mut buf)?;
+        stream.read_exact(&mut buf).await?;
         let msg = buf.as_slice().decrypt();
         if &msg[0..3] == b"skt" {
             let state = msg[3];
@@ -27,15 +28,15 @@ impl SocketClient {
         }
     }
 
-    pub fn switch_on() -> io::Result<()> {
-        let mut stream = TcpStream::connect("127.0.0.1:7000")?;
-        stream.write_all(&Commands::switch_on_cmd())?;
+    pub async fn switch_on() -> io::Result<()> {
+        let mut stream = TcpStream::connect("127.0.0.1:7000").await?;
+        stream.write_all(&Commands::switch_on_cmd()).await?;
         Ok(())
     }
 
-    pub fn switch_off() -> io::Result<()> {
-        let mut stream = TcpStream::connect("127.0.0.1:7000")?;
-        stream.write_all(&Commands::switch_off_cmd())?;
+    pub async fn switch_off() -> io::Result<()> {
+        let mut stream = TcpStream::connect("127.0.0.1:7000").await?;
+        stream.write_all(&Commands::switch_off_cmd()).await?;
         Ok(())
     }
 }

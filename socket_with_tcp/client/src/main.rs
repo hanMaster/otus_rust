@@ -1,12 +1,13 @@
 use client::SocketClient;
 
 // cargo run --package client
-fn main() -> std::io::Result<()> {
-    SocketClient::switch_on()?;
-    let status = SocketClient::get_status()?;
+#[tokio::main]
+async fn main() -> std::io::Result<()> {
+    SocketClient::switch_on().await?;
+    let status = SocketClient::get_status().await?;
     println!("{}", status);
-    SocketClient::switch_off()?;
-    let status = SocketClient::get_status()?;
+    SocketClient::switch_off().await?;
+    let status = SocketClient::get_status().await?;
     println!("{}", status);
     Ok(())
 }
