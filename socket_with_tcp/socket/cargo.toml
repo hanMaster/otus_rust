@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 rand = "0.8.4"
 concat-arrays = "0.1.2"
+tokio = { version = "1.20.0", features = ["macros", "net", "rt-multi-thread", "io-util"] }

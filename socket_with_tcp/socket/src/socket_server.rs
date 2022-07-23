@@ -2,17 +2,17 @@ use concat_arrays::concat_arrays;
 use socket::crypt::Crypt;
 use socket::Socket;
 use std::io;
-use std::io::{Read, Write};
-use std::net::{TcpListener, TcpStream, ToSocketAddrs};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::net::{TcpListener, TcpStream, ToSocketAddrs};
 
 pub struct SocketServer {}
 
 impl SocketServer {
-    pub fn bind<Addrs>(addrs: Addrs) -> io::Result<TcpListener>
+    pub async fn bind<Addrs>(addrs: Addrs) -> io::Result<TcpListener>
     where
         Addrs: ToSocketAddrs,
     {
-        let tcp = TcpListener::bind(addrs)?;
+        let tcp = TcpListener::bind(addrs).await?;
         Ok(tcp)
     }
     /// command: byte array [u8;4]:
@@ -27,9 +27,9 @@ impl SocketServer {
     /// 1 byte - ON or OFF
     /// 8 byte - f64 (power consumption)
 
-    pub fn handle_client(mut stream: TcpStream, socket: &mut Socket) -> io::Result<()> {
+    pub async fn handle_client(mut stream: TcpStream, socket: &mut Socket) -> io::Result<()> {
         let mut buf = [0; 4];
-        stream.read_exact(&mut buf)?;
+        stream.read_exact(&mut buf).await?;
         let decoded = buf.as_slice().decrypt();
         match decoded.as_slice() {
             b"cmd0" => {
@@ -44,7 +44,7 @@ impl SocketServer {
                 let prefix = b"skt";
                 let pwr_bytes = pwr.to_be_bytes();
                 let response: [u8; 12] = concat_arrays!(*prefix, [state], pwr_bytes);
-                stream.write_all(&response.as_slice().encrypt())?;
+                stream.write_all(&response.as_slice().encrypt()).await?;
             }
             b"cmd1" => {
                 println!("Socket switch on invoked");
