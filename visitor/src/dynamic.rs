@@ -14,12 +14,12 @@ pub struct Test {
 }
 
 pub trait ProjectElement {
-    fn be_written(&mut self, v: &Box<dyn Developer>);
+    fn be_written(&mut self, v: &dyn Developer);
     fn get_info(&self);
 }
 
 impl ProjectElement for Class {
-    fn be_written(&mut self, v: &Box<dyn Developer>) {
+    fn be_written(&mut self, v: &dyn Developer) {
         v.create_class(self);
     }
 
@@ -28,7 +28,7 @@ impl ProjectElement for Class {
     }
 }
 impl ProjectElement for Database {
-    fn be_written(&mut self, v: &Box<dyn Developer>) {
+    fn be_written(&mut self, v: &dyn Developer) {
         v.create_db(self);
     }
 
@@ -38,7 +38,7 @@ impl ProjectElement for Database {
 }
 
 impl ProjectElement for Test {
-    fn be_written(&mut self, v: &Box<dyn Developer>) {
+    fn be_written(&mut self, v: &dyn Developer) {
         v.create_test(self);
     }
 
