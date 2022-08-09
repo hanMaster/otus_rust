@@ -53,7 +53,6 @@ pub trait Developer {
     fn create_test(&self, element: &mut Test);
 }
 
-#[derive(Default)]
 pub struct Junior;
 
 impl Developer for Junior {
@@ -73,7 +72,6 @@ impl Developer for Junior {
     }
 }
 
-#[derive(Default)]
 pub struct Senior;
 
 impl Developer for Senior {
