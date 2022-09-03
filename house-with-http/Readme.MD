@@ -1,0 +1,1 @@
+## Smart house with http API and mongodb
