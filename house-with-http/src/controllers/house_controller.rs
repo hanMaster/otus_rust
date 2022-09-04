@@ -21,9 +21,11 @@ pub async fn add_room(
     name: Path<String>,
 ) -> HttpResponse {
     let room_name = name.into_inner();
-
-    let mut house = house_data.write().unwrap();
-    house.add_room(&room_name);
+    {
+        let mut house = house_data.write().unwrap();
+        house.add_room(&room_name);
+    }
+    let house = house_data.read().unwrap().to_owned();
     repo.persist_house(&house).await;
     HttpResponse::Ok().json(house.to_owned())
 }
@@ -36,8 +38,11 @@ pub async fn remove_room(
 ) -> HttpResponse {
     let room_name = name.into_inner();
 
-    let mut house = house_data.write().unwrap();
-    house.remove_room(&room_name);
+    {
+        let mut house = house_data.write().unwrap();
+        house.remove_room(&room_name);
+    }
+    let house = house_data.read().unwrap().to_owned();
     repo.persist_house(&house).await;
     HttpResponse::Ok().json(house.to_owned())
 }
@@ -48,12 +53,15 @@ pub async fn add_device(
     repo: Data<HouseRepo>,
     add_device: Json<AddDevice>,
 ) -> HttpResponse {
-    let mut house = house_data.write().unwrap();
-    house.add_device_in_room(
-        &add_device.room_name,
-        &add_device.device_name,
-        add_device.device_type,
-    );
+    {
+        let mut house = house_data.write().unwrap();
+        house.add_device_in_room(
+            &add_device.room_name,
+            &add_device.device_name,
+            add_device.device_type,
+        );
+    }
+    let house = house_data.read().unwrap().to_owned();
     repo.persist_house(&house).await;
     HttpResponse::Ok().json(house.to_owned())
 }
@@ -65,8 +73,11 @@ pub async fn remove_device(
     names: Path<(String, String)>,
 ) -> HttpResponse {
     let (room_name, device_name) = names.into_inner();
-    let mut house = house_data.write().unwrap();
-    house.remove_device_from_room(&room_name, &device_name);
+    {
+        let mut house = house_data.write().unwrap();
+        house.remove_device_from_room(&room_name, &device_name);
+    }
+    let house = house_data.read().unwrap().to_owned();
     repo.persist_house(&house).await;
     HttpResponse::Ok().json(house.to_owned())
 }
