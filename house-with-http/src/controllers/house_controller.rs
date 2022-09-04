@@ -1,32 +1,41 @@
 use crate::{models::house_model::House, repository::house_repo::HouseRepo};
 use actix_web::{
-    get, post,
-    web::{Data, Json, Path},
+    get,
+    web::{Data, Path},
     HttpResponse,
 };
+use std::cell::RefCell;
+use std::sync::{Arc, RwLock};
 
-#[post("/house")]
-pub async fn create_house(db: Data<HouseRepo>, new_house: Json<House>) -> HttpResponse {
-    let data = House {
-        id: None,
-        name: new_house.name.to_owned(),
-    };
-    let house_detail = db.create_house(data).await;
-    match house_detail {
-        Ok(house) => HttpResponse::Ok().json(house),
-        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
-    }
+#[get("/house")]
+pub async fn get_house(house_data: Data<Arc<RwLock<House>>>) -> HttpResponse {
+    let house = house_data.read().unwrap().to_owned();
+    HttpResponse::Ok().json(house)
 }
 
-#[get("/house/{name}")]
-pub async fn get_house(db: Data<HouseRepo>, path: Path<String>) -> HttpResponse {
-    let name = path.into_inner();
-    if name.is_empty() {
-        return HttpResponse::BadRequest().body("invalid house name");
-    }
-    let house_detail = db.get_house(&name).await;
-    match house_detail {
-        Ok(house) => HttpResponse::Ok().json(house),
-        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
-    }
+#[get("/house/add-room/{room_name}")]
+pub async fn add_room(
+    house_data: Data<Arc<RwLock<House>>>,
+    repo: Data<HouseRepo>,
+    name: Path<String>,
+) -> HttpResponse {
+    let room_name = name.into_inner();
+
+    let mut house = house_data.write().unwrap();
+    house.add_room(&room_name);
+    repo.persist_house(&house).await;
+    HttpResponse::Ok().json(house.to_owned())
+}
+
+#[get("/house/remove-room/{room_name}")]
+pub async fn remove_room(
+    house_data: Data<Arc<RwLock<House>>>,
+    _repo: Data<HouseRepo>,
+    name: Path<String>,
+) -> HttpResponse {
+    let room_name = name.into_inner();
+
+    let mut house = house_data.write().unwrap();
+    house.remove_room(&room_name);
+    HttpResponse::Ok().json(house.to_owned())
 }
