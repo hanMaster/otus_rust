@@ -30,12 +30,13 @@ pub async fn add_room(
 #[get("/house/remove-room/{room_name}")]
 pub async fn remove_room(
     house_data: Data<Arc<RwLock<House>>>,
-    _repo: Data<HouseRepo>,
+    repo: Data<HouseRepo>,
     name: Path<String>,
 ) -> HttpResponse {
     let room_name = name.into_inner();
 
     let mut house = house_data.write().unwrap();
     house.remove_room(&room_name);
+    repo.persist_house(&house).await;
     HttpResponse::Ok().json(house.to_owned())
 }
