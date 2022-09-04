@@ -23,7 +23,9 @@ pub async fn add_room(
     let room_name = name.into_inner();
     {
         let mut house = house_data.write().unwrap();
-        house.add_room(&room_name);
+        if let Err(err) = house.add_room(&room_name) {
+            return HttpResponse::UnprocessableEntity().body(err);
+        };
     }
     let house = house_data.read().unwrap().to_owned();
     repo.persist_house(&house).await;
@@ -55,11 +57,14 @@ pub async fn add_device(
 ) -> HttpResponse {
     {
         let mut house = house_data.write().unwrap();
-        house.add_device_in_room(
+
+        if let Err(err) = house.add_device_in_room(
             &add_device.room_name,
             &add_device.device_name,
             add_device.device_type,
-        );
+        ) {
+            return HttpResponse::UnprocessableEntity().body(err);
+        };
     }
     let house = house_data.read().unwrap().to_owned();
     repo.persist_house(&house).await;

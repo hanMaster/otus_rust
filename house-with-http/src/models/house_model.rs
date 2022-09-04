@@ -28,15 +28,16 @@ impl House {
         }
     }
 
-    pub fn add_room(&mut self, room_name: &str) {
+    pub fn add_room(&mut self, room_name: &str) -> Result<(), String> {
         let room_set: HashSet<String> =
             HashSet::from_iter(self.rooms.iter().map(|r| r.name.clone()));
         if room_set.contains(room_name) {
-            println!("Room {} already in list", room_name);
+            return Err(format!("Room {} already in list", room_name));
         } else {
             let room = Room::with_name(room_name);
             self.rooms.push(room);
         }
+        Ok(())
     }
 
     pub fn remove_room(&mut self, room_name: &str) {
@@ -48,12 +49,15 @@ impl House {
         room_name: &str,
         device_name: &str,
         device_type: DeviceType,
-    ) {
+    ) -> Result<(), String> {
         for item in self.rooms.iter_mut() {
             if item.name.eq(room_name) {
-                item.add_device(device_name, device_type);
+                if let Err(err) = item.add_device(device_name, device_type) {
+                    return Err(err);
+                };
             }
         }
+        Ok(())
     }
 
     pub fn remove_device_from_room(&mut self, room_name: &str, device_name: &str) {
