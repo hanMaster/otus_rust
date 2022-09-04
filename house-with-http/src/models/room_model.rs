@@ -23,7 +23,7 @@ impl Room {
         }
     }
 
-    pub fn add_device(&mut self, device_name: &str, device_type: DeviceType)-> Result<(), String> {
+    pub fn add_device(&mut self, device_name: &str, device_type: DeviceType) -> Result<(), String> {
         let device_set: HashSet<String> =
             HashSet::from_iter(self.devices.iter().map(|d| d.name.clone()));
         if device_set.contains(device_name) {

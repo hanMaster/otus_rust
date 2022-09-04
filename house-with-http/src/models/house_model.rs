@@ -67,4 +67,17 @@ impl House {
             }
         }
     }
+
+    pub fn device_list_by_room(&self, room_name: String) -> Vec<String> {
+        for room in self.rooms.iter() {
+            if room.name.eq(&room_name) {
+                return room.devices.iter().map(|d| d.name.clone()).collect();
+            }
+        }
+        vec![]
+    }
+
+    pub fn rooms_list(&self) -> Vec<String> {
+        self.rooms.iter().map(|item| item.name.clone()).collect()
+    }
 }

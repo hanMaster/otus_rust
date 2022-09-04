@@ -3,7 +3,7 @@ mod models;
 mod repository;
 
 use crate::controllers::house_controller::{
-    add_device, add_room, get_house, remove_device, remove_room,
+    add_device, add_room, device_list_by_room, get_house, remove_device, remove_room, rooms_list,
 };
 use crate::models::{device_model::DeviceType, house_model::House, room_model::Room};
 use crate::repository::{house_repo::HouseRepo, mongo::Mongo};
@@ -35,6 +35,8 @@ async fn main() -> std::io::Result<()> {
             .service(remove_room)
             .service(add_device)
             .service(remove_device)
+            .service(device_list_by_room)
+            .service(rooms_list)
     })
     .bind("127.0.0.1:8080")?
     .run()

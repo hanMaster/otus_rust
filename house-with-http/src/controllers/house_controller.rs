@@ -86,3 +86,21 @@ pub async fn remove_device(
     repo.persist_house(&house).await;
     HttpResponse::Ok().json(house.to_owned())
 }
+
+#[get("/house/devices/{room_name}")]
+pub async fn device_list_by_room(
+    house_data: Data<Arc<RwLock<House>>>,
+    name: Path<String>,
+) -> HttpResponse {
+    let room_name = name.into_inner();
+    let house = house_data.read().unwrap().to_owned();
+    let list = house.device_list_by_room(room_name);
+    HttpResponse::Ok().json(list)
+}
+
+#[get("/house/rooms")]
+pub async fn rooms_list(house_data: Data<Arc<RwLock<House>>>) -> HttpResponse {
+    let house = house_data.read().unwrap().to_owned();
+    let list = house.rooms_list();
+    HttpResponse::Ok().json(list)
+}
