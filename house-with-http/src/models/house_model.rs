@@ -2,7 +2,6 @@ use crate::{DeviceType, HouseRepo, Room};
 use mongodb::bson::oid::ObjectId;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
-use std::str::FromStr;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct House {
@@ -18,7 +17,7 @@ impl House {
         match house_result {
             Ok(house) => house,
             Err(_) => {
-                let mut new_house = Self {
+                let new_house = Self {
                     id: None,
                     name: name.to_string(),
                     rooms: vec![],
@@ -27,10 +26,6 @@ impl House {
                 repo.load_house(name).await.unwrap()
             }
         }
-    }
-
-    pub fn get_name(&self) -> &str {
-        self.name.as_str()
     }
 
     pub fn add_room(&mut self, room_name: &str) {

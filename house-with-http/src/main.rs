@@ -2,16 +2,17 @@ mod controllers;
 mod models;
 mod repository;
 
-use std::cell::RefCell;
-use std::sync::{Arc, RwLock};
-use actix_web::web::Data;
-use actix_web::{get, App, HttpResponse, HttpServer, Responder};
-use crate::controllers::house_controller::{add_room, get_house, remove_room};
+use crate::controllers::house_controller::{
+    add_device, add_room, get_house, remove_device, remove_room,
+};
 use crate::models::device_model::DeviceType;
 use crate::models::house_model::House;
 use crate::models::room_model::Room;
 use crate::repository::house_repo::HouseRepo;
 use crate::repository::mongo::Mongo;
+use actix_web::web::Data;
+use actix_web::{get, App, HttpResponse, HttpServer, Responder};
+use std::sync::{Arc, RwLock};
 
 #[get("/")]
 async fn hello() -> impl Responder {
@@ -26,7 +27,7 @@ async fn main() -> std::io::Result<()> {
 
     let mongo = Mongo::new().await;
     let house_repo = HouseRepo::init(mongo.get_db()).await;
-    let mut house = Arc::new(RwLock::new(House::with_name("myHouse", &house_repo).await));
+    let house = Arc::new(RwLock::new(House::with_name("myHouse", &house_repo).await));
 
     HttpServer::new(move || {
         App::new()
@@ -36,6 +37,8 @@ async fn main() -> std::io::Result<()> {
             .service(get_house)
             .service(add_room)
             .service(remove_room)
+            .service(add_device)
+            .service(remove_device)
     })
     .bind("127.0.0.1:8080")?
     .run()

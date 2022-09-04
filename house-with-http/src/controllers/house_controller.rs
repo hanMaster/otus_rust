@@ -1,10 +1,11 @@
+use crate::models::device_model::AddDevice;
 use crate::{models::house_model::House, repository::house_repo::HouseRepo};
+use actix_web::web::Json;
 use actix_web::{
-    get,
+    get, post,
     web::{Data, Path},
     HttpResponse,
 };
-use std::cell::RefCell;
 use std::sync::{Arc, RwLock};
 
 #[get("/house")]
@@ -37,6 +38,35 @@ pub async fn remove_room(
 
     let mut house = house_data.write().unwrap();
     house.remove_room(&room_name);
+    repo.persist_house(&house).await;
+    HttpResponse::Ok().json(house.to_owned())
+}
+
+#[post("/house/add-device")]
+pub async fn add_device(
+    house_data: Data<Arc<RwLock<House>>>,
+    repo: Data<HouseRepo>,
+    add_device: Json<AddDevice>,
+) -> HttpResponse {
+    let mut house = house_data.write().unwrap();
+    house.add_device_in_room(
+        &add_device.room_name,
+        &add_device.device_name,
+        add_device.device_type,
+    );
+    repo.persist_house(&house).await;
+    HttpResponse::Ok().json(house.to_owned())
+}
+
+#[get("/house/remove-device/{room_name}/{device_name}")]
+pub async fn remove_device(
+    house_data: Data<Arc<RwLock<House>>>,
+    repo: Data<HouseRepo>,
+    names: Path<(String, String)>,
+) -> HttpResponse {
+    let (room_name, device_name) = names.into_inner();
+    let mut house = house_data.write().unwrap();
+    house.remove_device_from_room(&room_name, &device_name);
     repo.persist_house(&house).await;
     HttpResponse::Ok().json(house.to_owned())
 }

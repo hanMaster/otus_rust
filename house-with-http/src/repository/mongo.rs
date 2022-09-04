@@ -1,11 +1,11 @@
 use dotenv::dotenv;
+use mongodb::{Client, Database};
 use std::env;
 use std::sync::Arc;
-use mongodb::{Client, Database};
 
 #[derive(Debug)]
 pub struct Mongo {
-    db: Arc<Database>
+    db: Arc<Database>,
 }
 
 impl Mongo {
@@ -17,9 +17,7 @@ impl Mongo {
         };
         let client = Client::with_uri_str(uri).await.unwrap();
         let db = client.database("smart-house");
-        Self {
-            db: Arc::new(db)
-        }
+        Self { db: Arc::new(db) }
     }
 
     pub fn get_db(&self) -> Arc<Database> {

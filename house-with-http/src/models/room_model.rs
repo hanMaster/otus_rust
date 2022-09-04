@@ -1,18 +1,18 @@
-use std::collections::HashSet;
-use serde::{Deserialize, Serialize};
-use crate::DeviceType;
 use crate::models::device_model::Device;
+use crate::DeviceType;
+use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Room {
     pub name: String,
-    pub devices: Vec<Device>
+    pub devices: Vec<Device>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AddRoom {
     pub house_name: String,
-    pub room_name: String
+    pub room_name: String,
 }
 
 impl Room {
