@@ -1,5 +1,5 @@
 [package]
-name = "house-with-http"
+name = "http-api"
 version = "0.1.0"
 edition = "2021"
 authors = ["Andrey Khalepov"]
