@@ -4,7 +4,7 @@ use crate::errors::AppError::{GetDevicesError, GetRoomsError};
 use errors::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use models::device::AddDevice;
+use models::device::{AddDevice, DeviceType};
 
 #[derive(Default)]
 pub struct HttpClient {
@@ -62,9 +62,15 @@ impl HttpClient {
         Ok(())
     }
 
-    pub fn add_device(&mut self, _room: &str, _device: &str, _device_type: &str) -> Result<()> {
-        let _url = format!("{}{}", &self.base_url, "house/add-device/");
-        // reqwest::blocking::post(url).json()?;
+    pub fn add_device(&mut self, room: &str, device: &str, device_type: DeviceType) -> Result<()> {
+        let client = reqwest::blocking::Client::new();
+        let url = format!("{}{}", &self.base_url, "house/add-device");
+        let device = AddDevice {
+            room_name: room.to_string(),
+            device_name: device.to_string(),
+            device_type
+        };
+        client.post(url).json(&device).send()?;
         Ok(())
     }
 }
@@ -80,6 +86,10 @@ mod test {
         client.add_room("bedroom")?;
         client.load_house()?;
         println!("After add room: {:?}", client.rooms);
+        client.add_device("bedroom", "sock", DeviceType::Socket)?;
+        client.load_house()?;
+        println!("After add device: {:?}", client.rooms);
+
         Ok(())
     }
 }
