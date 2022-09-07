@@ -4,3 +4,8 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Andrey Khalepov"]
 description = "Client for smart house http API"
+
+[dependencies]
+reqwest = { version = "0.11.11", features = ["blocking", "json"]}
+serde = { version = "1", features = ["derive"]}
+thiserror = "1.0.33"
