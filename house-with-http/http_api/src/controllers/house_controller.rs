@@ -1,5 +1,5 @@
-use crate::models::device_model::AddDevice;
-use crate::{models::house_model::House, repository::house_repo::HouseRepo};
+use models::device::AddDevice;
+use crate::repository::house_repo::HouseRepo;
 use actix_web::web::Json;
 use actix_web::{
     get, post,
@@ -7,6 +7,7 @@ use actix_web::{
     HttpResponse,
 };
 use std::sync::{Arc, RwLock};
+use crate::House;
 
 #[get("/house")]
 pub async fn get_house(house_data: Data<Arc<RwLock<House>>>) -> HttpResponse {

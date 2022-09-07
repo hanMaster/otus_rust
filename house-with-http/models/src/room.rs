@@ -1,7 +1,6 @@
-use crate::models::device_model::Device;
-use crate::DeviceType;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use crate::device::{Device, DeviceType};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Room {

@@ -375,7 +375,7 @@ dependencies = [
 name = "client"
 version = "0.1.0"
 dependencies = [
- "http_api",
+ "models",
  "reqwest",
  "serde",
  "thiserror",
@@ -802,6 +802,7 @@ dependencies = [
  "dotenv",
  "env_logger",
  "log",
+ "models",
  "mongodb",
  "serde",
  "thiserror",
@@ -1076,6 +1077,13 @@ dependencies = [
  "log",
  "wasi 0.11.0+wasi-snapshot-preview1",
  "windows-sys",
+]
+
+[[package]]
+name = "models"
+version = "0.1.0"
+dependencies = [
+ "serde",
 ]
 
 [[package]]

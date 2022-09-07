@@ -1,12 +1,11 @@
 use std::sync::Arc;
-
-use crate::models::house_model::House;
 use mongodb::results::UpdateResult;
 use mongodb::{
     bson::{doc, ser},
     results::InsertOneResult,
     Collection, Database,
 };
+use crate::House;
 
 #[derive(Clone)]
 pub struct HouseRepo {

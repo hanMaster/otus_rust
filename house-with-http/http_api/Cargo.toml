@@ -6,6 +6,7 @@ authors = ["Andrey Khalepov"]
 description = "Smart house with http API and mongodb"
 
 [dependencies]
+models = { path = "../models"}
 actix-web = "4.1.0"
 dotenv = "0.15.0"
 env_logger = "0.9.0"

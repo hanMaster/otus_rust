@@ -1,7 +1,9 @@
-use crate::{DeviceType, HouseRepo, Room};
 use mongodb::bson::oid::ObjectId;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use models::device::DeviceType;
+use models::room::Room;
+use crate::HouseRepo;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct House {

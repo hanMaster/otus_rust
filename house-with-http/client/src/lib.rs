@@ -4,6 +4,7 @@ use crate::errors::AppError::{GetDevicesError, GetRoomsError};
 use errors::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use models::device::AddDevice;
 
 #[derive(Default)]
 pub struct HttpClient {
