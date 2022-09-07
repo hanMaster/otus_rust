@@ -2,5 +2,5 @@
 
 members = [
     "client",
-    "http-api"
+    "http_api"
 ]

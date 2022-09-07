@@ -375,6 +375,7 @@ dependencies = [
 name = "client"
 version = "0.1.0"
 dependencies = [
+ "http_api",
  "reqwest",
  "serde",
  "thiserror",
@@ -783,7 +784,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "http-api"
+name = "http-body"
+version = "0.4.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d5f38f16d184e36f2408a55281cd658ecbd3ca05cce6d6510a176eca393e26d1"
+dependencies = [
+ "bytes",
+ "http",
+ "pin-project-lite",
+]
+
+[[package]]
+name = "http_api"
 version = "0.1.0"
 dependencies = [
  "actix-web",
@@ -793,17 +805,6 @@ dependencies = [
  "mongodb",
  "serde",
  "thiserror",
-]
-
-[[package]]
-name = "http-body"
-version = "0.4.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d5f38f16d184e36f2408a55281cd658ecbd3ca05cce6d6510a176eca393e26d1"
-dependencies = [
- "bytes",
- "http",
- "pin-project-lite",
 ]
 
 [[package]]

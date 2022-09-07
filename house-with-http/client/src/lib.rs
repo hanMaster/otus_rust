@@ -7,6 +7,7 @@ use std::collections::HashMap;
 
 #[derive(Default)]
 pub struct HttpClient {
+    base_url: String,
     rooms: HashMap<String, Vec<String>>,
 }
 
@@ -14,17 +15,20 @@ pub struct HttpClient {
 pub struct Items(Vec<String>);
 
 impl HttpClient {
-    pub fn new() -> Result<Self> {
-        let mut client = HttpClient::default();
-        client.request_rooms()?;
-        client.request_devices()?;
+    pub fn new(url: &str) -> Result<Self> {
+        let mut client = HttpClient {
+            base_url: url.to_string(),
+            ..Default::default()
+        };
+        client.load_house()?;
         Ok(client)
     }
 
     fn request_rooms(&mut self) -> Result<()> {
-        let rooms = reqwest::blocking::get("http://localhost:8080/house/rooms")?
+        let url = format!("{}{}", &self.base_url, "house/rooms");
+        let rooms = reqwest::blocking::get(url)?
             .json::<Items>()
-            .or_else(|_|{ Err(GetRoomsError)})?;
+            .map_err(|_| GetRoomsError)?;
         self.rooms.clear();
         for room in rooms.0.iter() {
             self.rooms.insert(room.clone(), vec![]);
@@ -34,9 +38,10 @@ impl HttpClient {
 
     fn request_devices(&mut self) -> Result<()> {
         for room in self.rooms.iter_mut() {
-            let devices: Items =
-                reqwest::blocking::get("http://localhost:8080/house/devices/".to_owned() + room.0)?
-                    .json().or_else(|_|{ Err(GetDevicesError)})?;
+            let url = format!("{}{}{}", &self.base_url, "house/devices/", &room.0);
+            let devices: Items = reqwest::blocking::get(url)?
+                .json()
+                .map_err(|_| GetDevicesError)?;
             for device in devices.0.iter() {
                 room.1.push(device.clone());
             }
@@ -44,7 +49,21 @@ impl HttpClient {
         Ok(())
     }
 
-    pub fn add_room(&mut self) -> Result<()> {
+    pub fn load_house(&mut self) -> Result<()> {
+        self.request_rooms()?;
+        self.request_devices()?;
+        Ok(())
+    }
+
+    pub fn add_room(&mut self, room: &str) -> Result<()> {
+        let url = format!("{}{}{}", &self.base_url, "house/add-room/", room);
+        reqwest::blocking::get(url)?;
+        Ok(())
+    }
+
+    pub fn add_device(&mut self, _room: &str, _device: &str, _device_type: &str) -> Result<()> {
+        let _url = format!("{}{}", &self.base_url, "house/add-device/");
+        // reqwest::blocking::post(url).json()?;
         Ok(())
     }
 }
@@ -55,8 +74,11 @@ mod test {
 
     #[test]
     fn test_get_rooms() -> Result<()> {
-        let client = HttpClient::new()?;
-        println!("{:?}", client.rooms);
+        let mut client = HttpClient::new("http://localhost:8080/")?;
+        println!("Start: {:?}", client.rooms);
+        client.add_room("bedroom")?;
+        client.load_house()?;
+        println!("After add room: {:?}", client.rooms);
         Ok(())
     }
 }

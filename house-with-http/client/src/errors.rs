@@ -15,7 +15,7 @@ pub enum AppError {
     GetDevicesError,
 
     #[error("Failed to make request")]
-    RequestFailed(#[from] reqwest::Error)
+    RequestFailed(#[from] reqwest::Error),
 }
 
 pub type Result<T> = std::result::Result<T, AppError>;
