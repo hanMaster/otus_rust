@@ -2,11 +2,11 @@ mod controllers;
 mod models;
 mod repository;
 
-use crate::controllers::house_controller::{
+use controllers::house_controller::{
     add_device, add_room, device_list_by_room, get_house, remove_device, remove_room, rooms_list,
 };
-use crate::models::{device_model::DeviceType, house_model::House, room_model::Room};
-use crate::repository::{house_repo::HouseRepo, mongo::Mongo};
+use models::{device_model::DeviceType, house_model::House, room_model::Room};
+use repository::{house_repo::HouseRepo, mongo::Mongo};
 use actix_web::{get, web::Data, App, HttpResponse, HttpServer, Responder};
 use std::sync::{Arc, RwLock};
 
