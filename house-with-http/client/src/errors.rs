@@ -8,11 +8,14 @@ pub enum AppError {
     #[error("Failed to add device")]
     AddDeviceError,
 
-    #[error("Failed to get rooms")]
-    GetRoomsError,
+    #[error("Failed to remove room")]
+    RemoveRoomError,
 
-    #[error("Failed to get devices")]
-    GetDevicesError,
+    #[error("Failed to remove device")]
+    RemoveDeviceError,
+
+    #[error("Failed to get house structure")]
+    GetHouseError,
 
     #[error("Failed to make request")]
     RequestFailed(#[from] reqwest::Error),

@@ -5,7 +5,7 @@ use mongodb::{
     results::InsertOneResult,
     Collection, Database,
 };
-use crate::House;
+use crate::house::House;
 
 #[derive(Clone)]
 pub struct HouseRepo {

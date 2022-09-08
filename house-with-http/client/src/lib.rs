@@ -1,15 +1,17 @@
 pub mod errors;
 
-use crate::errors::AppError::{GetDevicesError, GetRoomsError};
+use crate::errors::AppError::{
+    AddDeviceError, AddRoomError, GetHouseError, RemoveDeviceError, RemoveRoomError,
+};
 use errors::Result;
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use http_api::house::House;
 use models::device::{AddDevice, DeviceType};
+use serde::{Deserialize, Serialize};
 
 #[derive(Default)]
 pub struct HttpClient {
     base_url: String,
-    rooms: HashMap<String, Vec<String>>,
+    house: House,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -21,44 +23,13 @@ impl HttpClient {
             base_url: url.to_string(),
             ..Default::default()
         };
-        client.load_house()?;
+        client.get_house_structure()?;
         Ok(client)
-    }
-
-    fn request_rooms(&mut self) -> Result<()> {
-        let url = format!("{}{}", &self.base_url, "house/rooms");
-        let rooms = reqwest::blocking::get(url)?
-            .json::<Items>()
-            .map_err(|_| GetRoomsError)?;
-        self.rooms.clear();
-        for room in rooms.0.iter() {
-            self.rooms.insert(room.clone(), vec![]);
-        }
-        Ok(())
-    }
-
-    fn request_devices(&mut self) -> Result<()> {
-        for room in self.rooms.iter_mut() {
-            let url = format!("{}{}{}", &self.base_url, "house/devices/", &room.0);
-            let devices: Items = reqwest::blocking::get(url)?
-                .json()
-                .map_err(|_| GetDevicesError)?;
-            for device in devices.0.iter() {
-                room.1.push(device.clone());
-            }
-        }
-        Ok(())
-    }
-
-    pub fn load_house(&mut self) -> Result<()> {
-        self.request_rooms()?;
-        self.request_devices()?;
-        Ok(())
     }
 
     pub fn add_room(&mut self, room: &str) -> Result<()> {
         let url = format!("{}{}{}", &self.base_url, "house/add-room/", room);
-        reqwest::blocking::get(url)?;
+        reqwest::blocking::get(url).map_err(|_| AddRoomError)?;
         Ok(())
     }
 
@@ -68,9 +39,37 @@ impl HttpClient {
         let device = AddDevice {
             room_name: room.to_string(),
             device_name: device.to_string(),
-            device_type
+            device_type,
         };
-        client.post(url).json(&device).send()?;
+        client
+            .post(url)
+            .json(&device)
+            .send()
+            .map_err(|_| AddDeviceError)?;
+        Ok(())
+    }
+
+    pub fn remove_room(&mut self, room: &str) -> Result<()> {
+        let url = format!("{}{}{}", &self.base_url, "house/remove-room/", room);
+        reqwest::blocking::get(url).map_err(|_| RemoveRoomError)?;
+        Ok(())
+    }
+
+    pub fn remove_device(&mut self, room: &str, device: &str) -> Result<()> {
+        let url = format!(
+            "{}{}{}{}{}",
+            &self.base_url, "house/remove-device/", room, "/", device
+        );
+        reqwest::blocking::get(url).map_err(|_| RemoveDeviceError)?;
+        Ok(())
+    }
+
+    pub fn get_house_structure(&mut self) -> Result<()> {
+        let url = format!("{}{}", &self.base_url, "house");
+        let house: House = reqwest::blocking::get(url)?
+            .json()
+            .map_err(|_| GetHouseError)?;
+        self.house = house;
         Ok(())
     }
 }
@@ -82,14 +81,19 @@ mod test {
     #[test]
     fn test_get_rooms() -> Result<()> {
         let mut client = HttpClient::new("http://localhost:8080/")?;
-        println!("Start: {:?}", client.rooms);
+        println!("Start: {:?}", client.house);
         client.add_room("bedroom")?;
-        client.load_house()?;
-        println!("After add room: {:?}", client.rooms);
+        client.get_house_structure()?;
+        println!("After add room: {:?}", client.house);
         client.add_device("bedroom", "sock", DeviceType::Socket)?;
-        client.load_house()?;
-        println!("After add device: {:?}", client.rooms);
-
+        client.get_house_structure()?;
+        println!("After add device: {:?}", client.house);
+        client.remove_device("bedroom", "sock")?;
+        client.get_house_structure()?;
+        println!("After remove device: {:?}", client.house);
+        client.remove_room("bedroom")?;
+        client.get_house_structure()?;
+        println!("After remove room: {:?}", client.house);
         Ok(())
     }
 }

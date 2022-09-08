@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use models::device::DeviceType;
 use models::room::Room;
-use crate::HouseRepo;
+use crate::db::house_repo::HouseRepo;
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Default)]
 pub struct House {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
     pub id: Option<ObjectId>,

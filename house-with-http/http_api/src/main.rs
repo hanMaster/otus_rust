@@ -1,14 +1,10 @@
-mod controllers;
-mod repository;
-pub mod house;
-
-use controllers::house_controller::{
+use actix_web::{get, web::Data, App, HttpResponse, HttpServer, Responder};
+use http_api::controller::{
     add_device, add_room, device_list_by_room, get_house, remove_device, remove_room, rooms_list,
 };
-use repository::{house_repo::HouseRepo, mongo::Mongo};
-use actix_web::{App, get, HttpResponse, HttpServer, Responder, web::Data};
+use http_api::house::House;
+use http_api::db::{house_repo::HouseRepo, mongo::Mongo};
 use std::sync::{Arc, RwLock};
-use crate::house::House;
 
 #[get("/")]
 async fn hello() -> impl Responder {
@@ -42,4 +38,4 @@ async fn main() -> std::io::Result<()> {
     .run()
     .await
 }
-// cargo run --package http-api
+// cargo run --package http_api
