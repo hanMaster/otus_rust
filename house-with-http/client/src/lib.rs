@@ -1,4 +1,5 @@
 pub mod errors;
+pub mod store;
 
 use crate::errors::AppError::{
     AddDeviceError, AddRoomError, GetHouseError, RemoveDeviceError, RemoveRoomError,

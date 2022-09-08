@@ -19,6 +19,9 @@ pub enum AppError {
 
     #[error("Failed to make request")]
     RequestFailed(#[from] reqwest::Error),
+
+    #[error("Device not found")]
+    DeviceNotFound
 }
 
 pub type Result<T> = std::result::Result<T, AppError>;
