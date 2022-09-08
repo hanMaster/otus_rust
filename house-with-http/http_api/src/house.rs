@@ -1,9 +1,10 @@
+use crate::db::house_repo::HouseRepo;
+use models::device::DeviceType;
+use models::device_info::DeviceInfo;
+use models::room::Room;
 use mongodb::bson::oid::ObjectId;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
-use models::device::DeviceType;
-use models::room::Room;
-use crate::db::house_repo::HouseRepo;
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
 pub struct House {
@@ -81,5 +82,19 @@ impl House {
 
     pub fn rooms_list(&self) -> Vec<String> {
         self.rooms.iter().map(|item| item.name.clone()).collect()
+    }
+
+    pub fn summary(&self) {
+        println!("House devices summary:");
+        for room in self.rooms.iter() {
+            for device in room.devices.iter() {
+                println!(
+                    "Room: {}, Device: {}, Status: {}",
+                    room.name,
+                    device.name,
+                    device.get_info()
+                )
+            }
+        }
     }
 }

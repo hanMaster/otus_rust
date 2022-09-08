@@ -1,4 +1,5 @@
-
+use crate::db::house_repo::HouseRepo;
+use crate::house::House;
 use actix_web::web::Json;
 use actix_web::{
     get, post,
@@ -7,8 +8,6 @@ use actix_web::{
 };
 use models::device::AddDevice;
 use std::sync::{Arc, RwLock};
-use crate::db::house_repo::HouseRepo;
-use crate::house::House;
 
 #[get("/house")]
 pub async fn get_house(house_data: Data<Arc<RwLock<House>>>) -> HttpResponse {

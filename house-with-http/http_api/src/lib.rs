@@ -1,3 +1,3 @@
-pub mod house;
-pub mod db;
 pub mod controller;
+pub mod db;
+pub mod house;

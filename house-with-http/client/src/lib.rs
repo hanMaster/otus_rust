@@ -1,5 +1,4 @@
 pub mod errors;
-pub mod store;
 
 use crate::errors::AppError::{
     AddDeviceError, AddRoomError, GetHouseError, RemoveDeviceError, RemoveRoomError,
@@ -73,6 +72,11 @@ impl HttpClient {
         self.house = house;
         Ok(())
     }
+
+    pub fn house_summary(&self) -> Result<()> {
+        self.house.summary();
+        Ok(())
+    }
 }
 
 #[cfg(test)]
@@ -95,6 +99,25 @@ mod test {
         client.remove_room("bedroom")?;
         client.get_house_structure()?;
         println!("After remove room: {:?}", client.house);
+        Ok(())
+    }
+
+    #[test]
+    fn test_summary() -> Result<()> {
+        let mut client = HttpClient::new("http://localhost:8080/")?;
+        println!("Start: {:?}", client.house);
+        client.add_room("hall")?;
+        client.add_room("kitchen")?;
+        client.add_room("bedroom")?;
+
+        client.add_device("hall", "hallSocket", DeviceType::Socket)?;
+        client.add_device("hall", "hallThermo", DeviceType::Thermometer)?;
+        client.add_device("kitchen", "kitchenSocket", DeviceType::Socket)?;
+        client.add_device("kitchen", "kitchenThermo", DeviceType::Thermometer)?;
+        client.add_device("bedroom", "bedroomSocket", DeviceType::Socket)?;
+        client.add_device("bedroom", "bedroomThermo", DeviceType::Thermometer)?;
+        client.get_house_structure()?;
+        client.house_summary()?;
         Ok(())
     }
 }
