@@ -7,7 +7,7 @@ use std::net::TcpStream;
 pub struct SocketClient {}
 
 impl SocketClient {
-    pub fn get_status() -> io::Result<String> {
+    pub fn get_status() -> io::Result<(u8, f64)> {
         let mut stream = TcpStream::connect("127.0.0.1:7000")?;
         stream.write_all(&Commands::get_status_cmd())?;
         let mut buf: [u8; 12] = [0; 12];
@@ -17,11 +17,7 @@ impl SocketClient {
             let state = msg[3];
             let pwr_buf: [u8; 8] = msg[4..].try_into().unwrap();
             let pwr = f64::from_be_bytes(pwr_buf);
-            Ok(format!(
-                "Socket state: {}, power: {:.2}",
-                if state == 0 { "OFF" } else { "ON" },
-                pwr
-            ))
+            Ok((state, pwr))
         } else {
             Err(io::Error::new(ErrorKind::InvalidData, "Corrupted message"))
         }

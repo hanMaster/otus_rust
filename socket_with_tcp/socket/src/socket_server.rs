@@ -1,4 +1,3 @@
-use concat_arrays::concat_arrays;
 use socket::crypt::Crypt;
 use socket::Socket;
 use std::io;
@@ -41,9 +40,12 @@ impl SocketServer {
                     if state == 1 { "ON" } else { "OFF" },
                     pwr
                 );
-                let prefix = b"skt";
+                let prefix = b"skt".as_slice();
                 let pwr_bytes = pwr.to_be_bytes();
-                let response: [u8; 12] = concat_arrays!(*prefix, [state], pwr_bytes);
+                let pwr_bytes_slice = pwr_bytes.as_slice();
+                let state_array = [state];
+                let state_slice = state_array.as_slice();
+                let response = [prefix, state_slice, pwr_bytes_slice].concat();
                 stream.write_all(&response.as_slice().encrypt())?;
             }
             b"cmd1" => {

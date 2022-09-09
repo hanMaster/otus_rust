@@ -4,3 +4,4 @@ members = [
     "client",
     "socket"
 ]
+resolver = "2"
