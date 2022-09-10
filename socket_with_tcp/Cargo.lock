@@ -153,15 +153,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fd16c4719339c4530435d38e511904438d07cce7950afa3718a84ac36c10e89e"
 
 [[package]]
-name = "client"
-version = "0.1.0"
-dependencies = [
- "iced",
- "iced_native",
- "socket",
-]
-
-[[package]]
 name = "clipboard-win"
 version = "4.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1540,6 +1531,15 @@ checksum = "0a345c870a1fae0b1b779085e81b51e614767c239e93503588e54c5b17f4b0e8"
 dependencies = [
  "smithay-client-toolkit 0.16.0",
  "wayland-client",
+]
+
+[[package]]
+name = "sock_client"
+version = "0.1.0"
+dependencies = [
+ "iced",
+ "iced_native",
+ "socket",
 ]
 
 [[package]]

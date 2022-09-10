@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "client",
+    "sock_client",
     "socket"
 ]
 resolver = "2"

@@ -1,4 +1,3 @@
-use client::SocketClient;
 use iced::keyboard::KeyCode::Escape;
 use iced::{
     executor, keyboard, window, Application, Column, Command, Container, Element, Length, Row,
@@ -6,6 +5,7 @@ use iced::{
 };
 use iced_native::Event;
 use std::fmt::Debug;
+use sock_client::SocketClient;
 
 // cargo run --package client
 pub fn main() -> iced::Result {
